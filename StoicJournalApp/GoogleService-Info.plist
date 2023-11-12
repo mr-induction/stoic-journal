@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAKPlO_wRAraZ0sXom5b5rlcNgpYXCi9cs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>585044655147</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>esoterika.StoicJournalApp</string>
+	<key>PROJECT_ID</key>
+	<string>stoicjournalapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>stoicjournalapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:585044655147:ios:d0a47ec54f0e06a2d1fe6e</string>
+</dict>
+</plist>
