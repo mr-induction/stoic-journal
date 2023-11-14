@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAKPlO_wRAraZ0sXom5b5rlcNgpYXCi9cs</string>
+	<string>AIzaSyCW6IvyTzA7yDUunQqDzYwwMlcAG4wfEgk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>585044655147</string>
+	<string>622210248740</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>esoterika.StoicJournalApp</string>
 	<key>PROJECT_ID</key>
-	<string>stoicjournalapp</string>
+	<string>stoic-journal-90b8f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>stoicjournalapp.appspot.com</string>
+	<string>stoic-journal-90b8f.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:585044655147:ios:d0a47ec54f0e06a2d1fe6e</string>
+	<string>1:622210248740:ios:e5fd948b545d026f7e28b1</string>
 </dict>
 </plist>
