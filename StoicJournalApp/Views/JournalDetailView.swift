@@ -1,5 +1,6 @@
 import SwiftUI
 
+
 struct JournalDetailView: View {
     var entry: JournalEntry
 
@@ -10,13 +11,17 @@ struct JournalDetailView: View {
                     .font(.largeTitle)
                 Text(entry.content)
                     .font(.body)
-                // Display other details of the entry as needed
+                // Add Stoic Response here
+                Text("Stoic Response: \(entry.stoicResponse)")
+                    .font(.subheadline)
+                    .padding(.top) // Add padding for visual separation
             }
             .padding()
         }
         .navigationBarTitle("Entry Details", displayMode: .inline)
     }
 }
+
 
 
 struct JournalEntryDetailView: View {

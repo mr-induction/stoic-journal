@@ -20,6 +20,7 @@ class FirebaseManager {
             "title": journalEntry.title,
             "content": journalEntry.content,
             "date": Timestamp(date: journalEntry.date),
+            "tags": journalEntry.tags.map { $0.name }, // Assuming you want to save tag names
             "moodId": journalEntry.moodId,
             "stoicResponse": journalEntry.stoicResponse // Add Stoic response property
         ]) { error in
