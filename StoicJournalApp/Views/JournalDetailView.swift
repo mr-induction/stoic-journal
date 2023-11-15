@@ -1,20 +1,36 @@
 import SwiftUI
 
-
 struct JournalDetailView: View {
     var entry: JournalEntry
+
+    // Define dateFormatter here
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text(entry.title)
                     .font(.largeTitle)
+                    .padding(.bottom, 2)
+
+                // Use dateFormatter here
+                Text("Date: \(entry.date, formatter: dateFormatter)")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 2)
+
                 Text(entry.content)
                     .font(.body)
-                // Add Stoic Response here
+                    .padding(.bottom, 2)
+
                 Text("Stoic Response: \(entry.stoicResponse)")
                     .font(.subheadline)
-                    .padding(.top) // Add padding for visual separation
+                    .padding(.top)
             }
             .padding()
         }
@@ -23,30 +39,49 @@ struct JournalDetailView: View {
 }
 
 
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }
 
 struct JournalEntryDetailView: View {
     var entry: JournalEntry
-
+    
+    // Define dateFormatter here
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text(entry.title)
                     .font(.largeTitle)
                     .padding(.bottom, 2)
-
+                
+                // Use dateFormatter here
+                Text("Date: \(entry.date, formatter: dateFormatter)")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 2)
+                
                 Text(entry.content)
                     .font(.body)
                     .padding(.bottom, 2)
-
+                
                 Text("Mood ID: \(entry.moodId)")
                     .font(.subheadline)
                     .padding(.bottom, 2)
-
-                // Display other properties as needed
+                
+                Text("Stoic Response: \(entry.stoicResponse)")
+                    .font(.subheadline)
+                
             }
-            .padding()
         }
-        .navigationTitle("Entry Details")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }

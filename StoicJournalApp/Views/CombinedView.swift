@@ -9,57 +9,65 @@ struct CombinedView: View {
     @State private var stoicResponse: String = ""
     @State private var isLoading: Bool = false
     @State private var cancellables = Set<AnyCancellable>()
-    
+
     @ObservedObject var journalViewModel = JournalViewModel() // ViewModel for journal entries
     var openAIService = OpenAIService() // Service for getting Stoic responses
-    
+
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Journal Entry")) {
+                Section(header: Text("Journal Entry").font(StoicTheme.titleFont)) {
                     TextField("Title", text: $title)
                         .padding()
-                        .border(Color.gray, width: 1)
+                        .background(StoicTheme.secondaryColor) // Assuming secondaryColor for background
+                        .foregroundColor(StoicTheme.primaryTextColor)
+                        .font(StoicTheme.primaryFont)
+                        .cornerRadius(5)
+                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(StoicTheme.secondaryTextColor, lineWidth: 1))
                         .accessibilityLabel("Journal Title")
                     
                     TextEditor(text: $content)
                         .frame(height: 200)
                         .padding()
-                        .border(Color.gray, width: 1)
+                        .background(StoicTheme.secondaryColor) // Assuming secondaryColor for background
+                        .foregroundColor(StoicTheme.primaryTextColor)
+                        .font(StoicTheme.primaryFont)
+                        .cornerRadius(5)
+                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(StoicTheme.secondaryTextColor, lineWidth: 1))
                         .accessibilityLabel("Journal Content")
                     
                     Picker("Select Tag", selection: $selectedTag) {
                         Text("None").tag(nil as JournalTag?) // Handle nil selection
-                        ForEach(allAvailableTags, id: \.id) { tag in
+                        ForEach(allAvailableTags, id: \.self) { tag in
                             Text(tag.name).tag(tag as JournalTag?)
                         }
                     }
-                    .pickerStyle(.menu)
-                    
+                    .pickerStyle(MenuPickerStyle())
+                    .foregroundColor(StoicTheme.primaryTextColor)
+
                     Picker("Select Mood", selection: $selectedMood) {
                         Text("None").tag(nil as Mood?) // Handle nil selection
-                        ForEach(allAvailableMoods, id: \.description) { mood in
+                        ForEach(allAvailableMoods, id: \.self) { mood in
                             Text(mood.description).tag(mood as Mood?)
                         }
                     }
-                    .pickerStyle(.menu)
+                    .pickerStyle(MenuPickerStyle())
+                    .foregroundColor(StoicTheme.primaryTextColor)
                     
                     Button("Save") {
-                        isLoading = true
                         saveJournalEntry()
                     }
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
+                    .background(StoicTheme.accentColor) // Use StoicTheme.accentColor for button background
+                    .foregroundColor(StoicTheme.secondaryColor) // Use StoicTheme.secondaryColor for button text
                     .cornerRadius(8)
-                    .accessibilityLabel("Save Journal Entry")
                     .disabled(isLoading)
+                    .accessibilityLabel("Save Journal Entry")
                 }
                 
-                Section(header: Text("Stoic Response")) {
+                Section(header: Text("Stoic Response").font(StoicTheme.titleFont)) {
                     Button("Get Stoic Response") {
                         stoicResponse = ""
-                        isLoading = true
                         getStoicResponse()
                     }
                     .disabled(isLoading || content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -70,20 +78,35 @@ struct CombinedView: View {
                     } else {
                         Text(stoicResponse)
                             .padding()
+                            .background(StoicTheme.secondaryColor) // Assuming background needed here
+                            .foregroundColor(StoicTheme.primaryTextColor)
                     }
                 }
                 
-                Section(header: Text("Saved Journal Entries")) {
+                Section(header: Text("Saved Journal Entries").font(StoicTheme.titleFont)) {
                     NavigationLink(destination: JournalListView(journalViewModel: journalViewModel)) {
-                        Text("View Saved Entries")
+                        Text("View Saved Entries").foregroundColor(StoicTheme.primaryTextColor)
                     }
                 }
             }
-            .font(.body) // Dynamic type support
+            .font(StoicTheme.primaryFont) // Makes font consistent throughout the view
             .navigationBarTitle("Combined Journal")
+            .onAppear {
+                // Set the appearance for NavigationBar when this view appears
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithOpaqueBackground()
+                appearance.backgroundColor = UIColor(StoicTheme.primaryColor) // Set the background color using StoicTheme
+                appearance.titleTextAttributes = [.foregroundColor : UIColor(StoicTheme.accentColor)] // Title color
+                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(StoicTheme.accentColor)] // Large title color
+                
+                // Apply the appearance to the navigation bar
+                UINavigationBar.appearance().standardAppearance = appearance
+                UINavigationBar.appearance().compactAppearance = appearance
+                UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                UINavigationBar.appearance().tintColor = UIColor(StoicTheme.accentColor) // Control color
+            }
         }
     }
-    
     private func getStoicResponse() {
         openAIService.generateStoicResponse(from: content)
             .receive(on: DispatchQueue.main)
@@ -114,7 +137,6 @@ struct CombinedView: View {
                         content: content,
                         date: Date(),
                         moodId: selectedMood?.description ?? "defaultMoodId",
-                        userId: "exampleUserId",
                         tags: tagArray, // Provide the tags array
                         stoicResponse: response
                     )
