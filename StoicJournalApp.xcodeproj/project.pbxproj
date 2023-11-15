@@ -12,6 +12,8 @@
 		0A135D012B03206300ED4A34 /* StoicResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D002B03206300ED4A34 /* StoicResponseView.swift */; };
 		0A135D032B032AAA00ED4A34 /* CombinedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D022B032AAA00ED4A34 /* CombinedView.swift */; };
 		0A135D052B03F07A00ED4A34 /* JournalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D042B03F07A00ED4A34 /* JournalViewModel.swift */; };
+		0A135D072B040F9A00ED4A34 /* StoicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D062B040F9A00ED4A34 /* StoicTheme.swift */; };
+		0A135D092B042C8200ED4A34 /* DailyQuoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D082B042C8200ED4A34 /* DailyQuoteView.swift */; };
 		0A4393972B02A1BF0032C862 /* JournalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4393962B02A1BF0032C862 /* JournalListView.swift */; };
 		0A4393992B02A1DB0032C862 /* JournalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4393982B02A1DB0032C862 /* JournalDetailView.swift */; };
 		0A43939B2B02ADBA0032C862 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43939A2B02ADBA0032C862 /* FirebaseManager.swift */; };
@@ -54,6 +56,8 @@
 		0A135D002B03206300ED4A34 /* StoicResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoicResponseView.swift; path = StoicJournalApp/Views/StoicResponseView.swift; sourceTree = SOURCE_ROOT; };
 		0A135D022B032AAA00ED4A34 /* CombinedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CombinedView.swift; path = StoicJournalApp/Views/CombinedView.swift; sourceTree = SOURCE_ROOT; };
 		0A135D042B03F07A00ED4A34 /* JournalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewModel.swift; sourceTree = "<group>"; };
+		0A135D062B040F9A00ED4A34 /* StoicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoicTheme.swift; path = StoicJournalApp/Models/StoicTheme.swift; sourceTree = SOURCE_ROOT; };
+		0A135D082B042C8200ED4A34 /* DailyQuoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuoteView.swift; sourceTree = SOURCE_ROOT; };
 		0A4393962B02A1BF0032C862 /* JournalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalListView.swift; sourceTree = "<group>"; };
 		0A4393982B02A1DB0032C862 /* JournalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalDetailView.swift; sourceTree = "<group>"; };
 		0A43939A2B02ADBA0032C862 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
@@ -106,6 +110,7 @@
 			children = (
 				0A47666E2B0168CF00B53995 /* AppDelegate.swift */,
 				0A4766722B01F3E900B53995 /* JournalEntryForm.swift */,
+				0A135D062B040F9A00ED4A34 /* StoicTheme.swift */,
 				0A135CFE2B031EBA00ED4A34 /* OpenAIService.swift */,
 				0A135CFC2B030E8C00ED4A34 /* JournalEntryModel.swift */,
 				0A43939A2B02ADBA0032C862 /* FirebaseManager.swift */,
@@ -117,6 +122,7 @@
 		0A4766712B0168F000B53995 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0A135D082B042C8200ED4A34 /* DailyQuoteView.swift */,
 				0A4393962B02A1BF0032C862 /* JournalListView.swift */,
 				0A4393982B02A1DB0032C862 /* JournalDetailView.swift */,
 				0A135D022B032AAA00ED4A34 /* CombinedView.swift */,
@@ -328,6 +334,7 @@
 				0A135D052B03F07A00ED4A34 /* JournalViewModel.swift in Sources */,
 				0A135D032B032AAA00ED4A34 /* CombinedView.swift in Sources */,
 				0A4393972B02A1BF0032C862 /* JournalListView.swift in Sources */,
+				0A135D092B042C8200ED4A34 /* DailyQuoteView.swift in Sources */,
 				0A135D012B03206300ED4A34 /* StoicResponseView.swift in Sources */,
 				0A47666F2B0168CF00B53995 /* AppDelegate.swift in Sources */,
 				0A4393992B02A1DB0032C862 /* JournalDetailView.swift in Sources */,
@@ -336,6 +343,7 @@
 				0A135CFF2B031EBA00ED4A34 /* OpenAIService.swift in Sources */,
 				0A135CFD2B030E8C00ED4A34 /* JournalEntryModel.swift in Sources */,
 				0A9158902B013E7A00284492 /* ContentView.swift in Sources */,
+				0A135D072B040F9A00ED4A34 /* StoicTheme.swift in Sources */,
 				0A4766732B01F3E900B53995 /* JournalEntryForm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
