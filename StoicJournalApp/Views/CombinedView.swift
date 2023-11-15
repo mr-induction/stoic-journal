@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 
+// Assuming allAvailableTags, allAvailableMoods, and journalPrompts are defined elsewhere
+
 struct CombinedView: View {
     @State private var title: String = ""
     @State private var content: String = ""
@@ -9,6 +11,7 @@ struct CombinedView: View {
     @State private var stoicResponse: String = ""
     @State private var isLoading: Bool = false
     @State private var cancellables = Set<AnyCancellable>()
+    @State private var showingSaveConfirmation = false // For save confirmation alert
 
     @ObservedObject var journalViewModel = JournalViewModel() // ViewModel for journal entries
     var openAIService = OpenAIService() // Service for getting Stoic responses
@@ -16,56 +19,61 @@ struct CombinedView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Journal Entry").font(StoicTheme.titleFont)) {
+                Section(header: Text("Journal Entry")) {
                     TextField("Title", text: $title)
                         .padding()
-                        .background(StoicTheme.secondaryColor) // Assuming secondaryColor for background
-                        .foregroundColor(StoicTheme.primaryTextColor)
-                        .font(StoicTheme.primaryFont)
-                        .cornerRadius(5)
-                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(StoicTheme.secondaryTextColor, lineWidth: 1))
+                        .border(Color.gray, width: 1)
                         .accessibilityLabel("Journal Title")
                     
                     TextEditor(text: $content)
                         .frame(height: 200)
                         .padding()
-                        .background(StoicTheme.secondaryColor) // Assuming secondaryColor for background
-                        .foregroundColor(StoicTheme.primaryTextColor)
-                        .font(StoicTheme.primaryFont)
-                        .cornerRadius(5)
-                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(StoicTheme.secondaryTextColor, lineWidth: 1))
+                        .border(Color.gray, width: 1)
                         .accessibilityLabel("Journal Content")
-                    
+
+                    Button("Add Random Prompt") {
+                        addRandomPrompt()
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+
                     Picker("Select Tag", selection: $selectedTag) {
-                        Text("None").tag(nil as JournalTag?) // Handle nil selection
-                        ForEach(allAvailableTags, id: \.self) { tag in
+                        Text("None").tag(nil as JournalTag?)
+                        ForEach(allAvailableTags, id: \.id) { tag in
                             Text(tag.name).tag(tag as JournalTag?)
                         }
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .foregroundColor(StoicTheme.primaryTextColor)
+                    .pickerStyle(.menu)
 
                     Picker("Select Mood", selection: $selectedMood) {
-                        Text("None").tag(nil as Mood?) // Handle nil selection
-                        ForEach(allAvailableMoods, id: \.self) { mood in
+                        Text("None").tag(nil as Mood?)
+                        ForEach(allAvailableMoods, id: \.description) { mood in
                             Text(mood.description).tag(mood as Mood?)
                         }
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .foregroundColor(StoicTheme.primaryTextColor)
-                    
+                    .pickerStyle(.menu)
+
                     Button("Save") {
                         saveJournalEntry()
                     }
                     .padding()
-                    .background(StoicTheme.accentColor) // Use StoicTheme.accentColor for button background
-                    .foregroundColor(StoicTheme.secondaryColor) // Use StoicTheme.secondaryColor for button text
+                    .background(Color.blue)
+                    .foregroundColor(.white)
                     .cornerRadius(8)
                     .disabled(isLoading)
                     .accessibilityLabel("Save Journal Entry")
+                    .alert(isPresented: $showingSaveConfirmation) {
+                        Alert(
+                            title: Text("Confirmation"),
+                            message: Text("Journal entry saved successfully."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
-                
-                Section(header: Text("Stoic Response").font(StoicTheme.titleFont)) {
+
+                Section(header: Text("Stoic Response")) {
                     Button("Get Stoic Response") {
                         stoicResponse = ""
                         getStoicResponse()
@@ -78,36 +86,27 @@ struct CombinedView: View {
                     } else {
                         Text(stoicResponse)
                             .padding()
-                            .background(StoicTheme.secondaryColor) // Assuming background needed here
-                            .foregroundColor(StoicTheme.primaryTextColor)
                     }
                 }
-                
-                Section(header: Text("Saved Journal Entries").font(StoicTheme.titleFont)) {
+
+                Section(header: Text("Saved Journal Entries")) {
                     NavigationLink(destination: JournalListView(journalViewModel: journalViewModel)) {
-                        Text("View Saved Entries").foregroundColor(StoicTheme.primaryTextColor)
+                        Text("View Saved Entries")
                     }
                 }
             }
-            .font(StoicTheme.primaryFont) // Makes font consistent throughout the view
             .navigationBarTitle("Combined Journal")
-            .onAppear {
-                // Set the appearance for NavigationBar when this view appears
-                let appearance = UINavigationBarAppearance()
-                appearance.configureWithOpaqueBackground()
-                appearance.backgroundColor = UIColor(StoicTheme.primaryColor) // Set the background color using StoicTheme
-                appearance.titleTextAttributes = [.foregroundColor : UIColor(StoicTheme.accentColor)] // Title color
-                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(StoicTheme.accentColor)] // Large title color
-                
-                // Apply the appearance to the navigation bar
-                UINavigationBar.appearance().standardAppearance = appearance
-                UINavigationBar.appearance().compactAppearance = appearance
-                UINavigationBar.appearance().scrollEdgeAppearance = appearance
-                UINavigationBar.appearance().tintColor = UIColor(StoicTheme.accentColor) // Control color
-            }
         }
     }
+
+    private func addRandomPrompt() {
+        let randomPrompt = journalPrompts.randomElement() ?? "Default Prompt"
+        print("Selected prompt: \(randomPrompt)") // Debug statement
+        content += (content.isEmpty ? "" : "\n\n") + randomPrompt
+    }
+
     private func getStoicResponse() {
+        isLoading = true
         openAIService.generateStoicResponse(from: content)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -120,36 +119,36 @@ struct CombinedView: View {
             })
             .store(in: &cancellables)
     }
-    
-    private func saveJournalEntry() {
-            isLoading = true
-            openAIService.generateStoicResponse(from: content)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    isLoading = false
-                    if case .failure(let error) = completion {
-                        print("Error: \(error.localizedDescription)")
-                    }
-                }, receiveValue: { response in
-                    let tagArray = selectedTag != nil ? [selectedTag!] : [] // Convert the selectedTag to an array
-                    let newEntry = JournalEntry(
-                        title: title,
-                        content: content,
-                        date: Date(),
-                        moodId: selectedMood?.description ?? "defaultMoodId",
-                        tags: tagArray, // Provide the tags array
-                        stoicResponse: response
-                    )
-                    print("Journal Entry before saving: \(newEntry)") // Debug statement
 
-                    FirebaseManager.shared.createJournalEntry(newEntry) { error in
-                        if let error = error {
-                            print("Error saving journal entry: \(error.localizedDescription)")
-                        } else {
-                            print("Journal entry saved successfully!")
-                        }
+    private func saveJournalEntry() {
+        isLoading = true
+        openAIService.generateStoicResponse(from: content)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                isLoading = false
+                if case .failure(let error) = completion {
+                    print("Error: \(error.localizedDescription)")
+                } else {
+                    showingSaveConfirmation = true // Show confirmation alert on successful save
+                }
+            }, receiveValue: { response in
+                let tagArray = selectedTag != nil ? [selectedTag!] : []
+                let newEntry = JournalEntry(
+                    title: title,
+                    content: content,
+                    date: Date(),
+                    moodId: selectedMood?.description ?? "defaultMoodId",
+                    tags: tagArray,
+                    stoicResponse: response
+                )
+                FirebaseManager.shared.createJournalEntry(newEntry) { error in
+                    if let error = error {
+                        print("Error saving journal entry: \(error.localizedDescription)")
                     }
-                })
-                .store(in: &cancellables)
-        }
+                }
+            })
+            .store(in: &cancellables)
     }
+}
+
+// Preview provider omitted for brevity

@@ -9,7 +9,6 @@ let allAvailableTags: [JournalTag] = [
     // Add more tags as needed
 ]
 
-// Sample list of available moods
 let allAvailableMoods: [Mood] = [
     Mood(description: "Happy", icon: "icon1"),
     Mood(description: "Sad", icon: "icon2"),
@@ -17,6 +16,12 @@ let allAvailableMoods: [Mood] = [
     // Add more moods as needed
 ]
 
+let journalPrompts = [
+    "What are you grateful for today?",
+    "Describe a challenge you faced and how you overcame it.",
+    "What did you learn about yourself today?",
+    // Add more prompts as needed
+]
 
 struct JournalEntryForm: View {
     @Binding var title: String
@@ -31,21 +36,38 @@ struct JournalEntryForm: View {
                     .frame(height: 200)
                     .border(Color.gray, width: 1)
 
-                Section(header: Text("Tags")) {
-                    Picker("Select Tag", selection: $selectedTag) {
-                        Text("None").tag(JournalTag?.none)
-                        ForEach(allAvailableTags, id: \.id) { tag in
-                            Text(tag.name).tag(tag as JournalTag?)
-                        }
-                    }
-                    .pickerStyle(.menu)
+                // Button to insert a random prompt
+                Button("Add Random Prompt") {
+                    addRandomPrompt()
                 }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            }
 
-                Button("Save") {
-                    // Your save logic remains the same
+            Section(header: Text("Tags")) {
+                Picker("Select Tag", selection: $selectedTag) {
+                    Text("None").tag(JournalTag?.none)
+                    ForEach(allAvailableTags, id: \.id) { tag in
+                        Text(tag.name).tag(tag as JournalTag?)
+                    }
                 }
+                .pickerStyle(.menu)
+            }
+
+            Button("Save") {
+                // Your save logic remains the same
             }
         }
+        .onAppear {
+            print("JournalEntryForm appeared") // Debugging statement
+        }
+    }
+
+    private func addRandomPrompt() {
+        let randomPrompt = journalPrompts.randomElement() ?? ""
+        content += (content.isEmpty ? "" : "\n\n") + randomPrompt
     }
 }
 
@@ -54,3 +76,4 @@ struct JournalEntryForm_Previews: PreviewProvider {
         JournalEntryForm(title: .constant(""), content: .constant(""), selectedTag: .constant(nil))
     }
 }
+
