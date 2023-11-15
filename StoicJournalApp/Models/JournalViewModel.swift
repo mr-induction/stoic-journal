@@ -45,20 +45,24 @@ class JournalViewModel: ObservableObject {
                 let date = timestamp.dateValue()
                 let stoicResponse = data["stoicResponse"] as? String ?? "" // Assign a value for stoicResponse
                 
-                return JournalEntry(title: title, content: content, date: date, moodId: moodId, userId: userId, tags: [], stoicResponse: stoicResponse)
+                // Simply remove userId from the call
+                return JournalEntry(documentId: queryDocumentSnapshot.documentID, title: title, content: content, date: date, moodId: moodId, tags: [], stoicResponse: stoicResponse)
             }
         }
     }
-
+    
     func deleteJournalEntry(entry: JournalEntry) {
-        let entryIdString = entry.id.uuidString // Assuming id is UUID
+        guard let documentId = entry.documentId else {
+            print("Document ID not found")
+            return
+        }
         
-        db.collection("journalEntries").document(entryIdString).delete { error in
+        db.collection("journalEntries").document(documentId).delete { error in
             if let error = error {
                 print("Error removing journal entry: \(error)")
             } else {
                 DispatchQueue.main.async {
-                    self.entries.removeAll { $0.id == entry.id }
+                    self.entries.removeAll { $0.documentId == documentId }
                 }
             }
         }

@@ -42,9 +42,17 @@ class FirebaseManager {
     }
     
     func deleteJournalEntry(documentId: String, completion: @escaping (Error?) -> Void) {
-        firestore.collection("journalEntries").document(documentId).delete(completion: completion)
+        firestore.collection("journalEntries").document(documentId).delete { error in
+            if let error = error {
+                print("Error deleting journal entry: \(error.localizedDescription)")
+                completion(error)
+            } else {
+                completion(nil)
+                print("Journal entry deleted successfully")
+            }
+        }
     }
-    
+
     // CRUD operations for Mood
     func createMood(_ mood: Mood, completion: @escaping (Error?) -> Void) {
         do {

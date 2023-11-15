@@ -11,22 +11,25 @@ struct Mood: Codable, Hashable {
 }
 
 struct JournalEntry: Codable, Identifiable {
-    var id: UUID // Changed from 'let' to 'var'
+    var id: UUID
+    var documentId: String? // Add this line for Firestore document ID
     var title: String
     var content: String
     var date: Date
     var moodId: String
     var tags: [JournalTag]
-    var stoicResponse: String // Add Stoic response property
+    var stoicResponse: String
     
-    init(title: String, content: String, date: Date, moodId: String, userId: String, tags: [JournalTag], stoicResponse: String) {
-        self.id = UUID() // Generate a new UUID for each instance
+    // Update the initializer to include the documentId
+    init(id: UUID = UUID(), documentId: String? = nil, title: String, content: String, date: Date, moodId: String, tags: [JournalTag], stoicResponse: String) {
+        self.id = id
+        self.documentId = documentId
         self.title = title
         self.content = content
         self.date = date
         self.moodId = moodId
         self.tags = tags
-        self.stoicResponse = stoicResponse // Initialize Stoic response
+        self.stoicResponse = stoicResponse
     }
 }
 
