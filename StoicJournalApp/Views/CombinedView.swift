@@ -12,10 +12,10 @@ struct CombinedView: View {
     @State private var isLoading: Bool = false
     @State private var cancellables = Set<AnyCancellable>()
     @State private var showingSaveConfirmation = false // For save confirmation alert
-
+    
     @ObservedObject var journalViewModel = JournalViewModel() // ViewModel for journal entries
     var openAIService = OpenAIService() // Service for getting Stoic responses
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -30,7 +30,7 @@ struct CombinedView: View {
                         .padding()
                         .border(Color.gray, width: 1)
                         .accessibilityLabel("Journal Content")
-
+                    
                     Button("Add Random Prompt") {
                         addRandomPrompt()
                     }
@@ -38,7 +38,7 @@ struct CombinedView: View {
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(8)
-
+                    
                     Picker("Select Tag", selection: $selectedTag) {
                         Text("None").tag(nil as JournalTag?)
                         ForEach(allAvailableTags, id: \.id) { tag in
@@ -46,7 +46,7 @@ struct CombinedView: View {
                         }
                     }
                     .pickerStyle(.menu)
-
+                    
                     Picker("Select Mood", selection: $selectedMood) {
                         Text("None").tag(nil as Mood?)
                         ForEach(allAvailableMoods, id: \.description) { mood in
@@ -54,7 +54,7 @@ struct CombinedView: View {
                         }
                     }
                     .pickerStyle(.menu)
-
+                    
                     Button("Save") {
                         saveJournalEntry()
                     }
@@ -72,7 +72,7 @@ struct CombinedView: View {
                         )
                     }
                 }
-
+                
                 Section(header: Text("Stoic Response")) {
                     Button("Get Stoic Response") {
                         stoicResponse = ""
@@ -88,7 +88,7 @@ struct CombinedView: View {
                             .padding()
                     }
                 }
-
+                
                 Section(header: Text("Saved Journal Entries")) {
                     NavigationLink(destination: JournalListView(journalViewModel: journalViewModel)) {
                         Text("View Saved Entries")
@@ -98,13 +98,13 @@ struct CombinedView: View {
             .navigationBarTitle("Combined Journal")
         }
     }
-
+    
     private func addRandomPrompt() {
         let randomPrompt = journalPrompts.randomElement() ?? "Default Prompt"
         print("Selected prompt: \(randomPrompt)") // Debug statement
         content += (content.isEmpty ? "" : "\n\n") + randomPrompt
     }
-
+    
     private func getStoicResponse() {
         isLoading = true
         openAIService.generateStoicResponse(from: content)
@@ -119,36 +119,31 @@ struct CombinedView: View {
             })
             .store(in: &cancellables)
     }
-
+    
     private func saveJournalEntry() {
         isLoading = true
-        openAIService.generateStoicResponse(from: content)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                isLoading = false
-                if case .failure(let error) = completion {
-                    print("Error: \(error.localizedDescription)")
+        let tagArray = selectedTag != nil ? [selectedTag!] : []
+        let newEntry = JournalEntry(
+            title: title,
+            content: content,
+            date: Date(),
+            moodId: selectedMood?.description ?? "defaultMoodId",
+            tags: tagArray,
+            stoicResponse: stoicResponse
+        )
+        
+        FirebaseManager.shared.createJournalEntry(newEntry) { error in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                if let error = error {
+                    // Handle the error by showing an alert or some other user feedback
+                    print("Error saving journal entry: \(error.localizedDescription)")
                 } else {
-                    showingSaveConfirmation = true // Show confirmation alert on successful save
+                    self.showingSaveConfirmation = true // Show confirmation alert on successful save
                 }
-            }, receiveValue: { response in
-                let tagArray = selectedTag != nil ? [selectedTag!] : []
-                let newEntry = JournalEntry(
-                    title: title,
-                    content: content,
-                    date: Date(),
-                    moodId: selectedMood?.description ?? "defaultMoodId",
-                    tags: tagArray,
-                    stoicResponse: response
-                )
-                FirebaseManager.shared.createJournalEntry(newEntry) { error in
-                    if let error = error {
-                        print("Error saving journal entry: \(error.localizedDescription)")
-                    }
-                }
-            })
-            .store(in: &cancellables)
+            }
+        }
+        
+        // Preview provider omitted for brevity
     }
 }
-
-// Preview provider omitted for brevity
