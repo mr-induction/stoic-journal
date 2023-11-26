@@ -18,3 +18,14 @@ struct StoicTheme {
     static let primaryTextColor = Color(red: 51 / 255, green: 51 / 255, blue: 51 / 255) // Dark Charcoal
     static let secondaryTextColor = Color(red: 85 / 255, green: 85 / 255, blue: 85 / 255) // Dark Gray
 }
+
+
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .clipShape(Capsule())
+    }
+}

@@ -2,66 +2,65 @@ import SwiftUI
 import Firebase
 import Combine
 
-let allAvailableTags: [JournalTag] = [
-    JournalTag(id: "tag1", name: "Personal"),
-    JournalTag(id: "tag2", name: "Work"),
-    JournalTag(id: "tag3", name: "Travel"),
-    // Add more tags as needed
-]
-
-let allAvailableMoods: [Mood] = [
-    Mood(description: "Happy", icon: "icon1"),
-    Mood(description: "Sad", icon: "icon2"),
-    Mood(description: "Excited", icon: "icon3"),
-    // Add more moods as needed
-]
-
-let journalPrompts = [
-    "What are you grateful for today?",
-    "Describe a challenge you faced and how you overcame it.",
-    "What did you learn about yourself today?",
-    // Add more prompts as needed
-]
-
 struct JournalEntryForm: View {
     @Binding var title: String
     @Binding var content: String
     @Binding var selectedTag: JournalTag?
+    @Binding var selectedMood: Mood?
+    
+    var tags: [JournalTag]
+    var moods: [Mood]
+    var journalPrompts: [String] // Array of journal prompts passed directly to the view
 
     var body: some View {
-        Form {
-            Section(header: Text("Journal Entry")) {
-                TextField("Title", text: $title)
-                TextEditor(text: $content)
-                    .frame(height: 200)
-                    .border(Color.gray, width: 1)
+        NavigationView {
+            Form {
+                Section(header: Text("Journal Entry")) {
+                    TextField("Title", text: $title)
+                    TextEditor(text: $content)
+                        .frame(height: 200)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
 
-                // Button to insert a random prompt
-                Button("Add Random Prompt") {
-                    addRandomPrompt()
+                    Button("Add Random Prompt") {
+                        addRandomPrompt()
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
                 }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-            }
-
-            Section(header: Text("Tags")) {
-                Picker("Select Tag", selection: $selectedTag) {
-                    Text("None").tag(JournalTag?.none)
-                    ForEach(allAvailableTags, id: \.id) { tag in
-                        Text(tag.name).tag(tag as JournalTag?)
+                
+                Section(header: Text("Tags")) {
+                    Picker("Select a Tag", selection: $selectedTag) {
+                        Text("None").tag(nil as JournalTag?)
+                        ForEach(tags, id: \.id) { tag in
+                            Text(tag.name).tag(tag as JournalTag?)
+                        }
                     }
                 }
-                .pickerStyle(.menu)
-            }
+                
+                Section(header: Text("Mood")) {
+                    Picker("Select a Mood", selection: $selectedMood) {
+                        Text("None").tag(nil as Mood?)
+                        ForEach(moods, id: \.id) { mood in
+                            HStack {
+                                Image(systemName: mood.icon)
+                                Text(mood.description)
+                            }
+                            .tag(mood as Mood?)
+                        }
+                    }
+                }
 
-            Button("Save") {
-                // Your save logic remains the same
+                // ... other sections ...
             }
-        }
-        .onAppear {
-            print("JournalEntryForm appeared") // Debugging statement
+            .navigationBarTitle("Journal Entry", displayMode: .inline)
+            .onAppear {
+                print("JournalEntryForm appeared") // Debugging statement
+            }
         }
     }
 
@@ -71,9 +70,18 @@ struct JournalEntryForm: View {
     }
 }
 
+// Preview provider with sample data
 struct JournalEntryForm_Previews: PreviewProvider {
     static var previews: some View {
-        JournalEntryForm(title: .constant(""), content: .constant(""), selectedTag: .constant(nil))
+        JournalEntryForm(
+            title: .constant(""),
+            content: .constant(""),
+            selectedTag: .constant(nil),
+            selectedMood: .constant(nil),
+            tags: [JournalTag(id: "1", name: "Happy"), JournalTag(id: "2", name: "Sad")],
+            moods: [Mood(id: "1", icon: "sun.max", description: "Joyful"), Mood(id: "2", icon: "cloud", description: "Gloomy")],
+            journalPrompts: ["What are you grateful for?", "What made you smile today?"] // Sample journal prompts
+        )
     }
 }
 

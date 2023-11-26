@@ -1,6 +1,5 @@
-import SwiftUI
-import Combine
 
+<<<<<<< HEAD
 // Assuming allAvailableTags, allAvailableMoods, and journalPrompts are defined elsewhere
 
 struct CombinedView: View {
@@ -147,3 +146,5 @@ struct CombinedView: View {
         // Preview provider omitted for brevity
     }
 }
+=======
+>>>>>>> 7787fa4 (Initial commit)

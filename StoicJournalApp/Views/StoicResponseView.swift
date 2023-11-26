@@ -7,13 +7,13 @@ struct StoicResponseView: View {
     @State private var isLoading: Bool = false
     @State private var cancellables = Set<AnyCancellable>()
 
-    var openAIService = OpenAIService()
+    var openAIService: OpenAIService
 
     var body: some View {
         VStack {
             ZStack(alignment: .topLeading) {
                 if userContent.isEmpty {
-                    Text("Your journal entry content here.")
+                    Text("Enter your thoughts or questions here.")
                         .foregroundColor(.gray)
                         .padding(8)
                 }
@@ -27,23 +27,25 @@ struct StoicResponseView: View {
             }
 
             Button("Get Stoic Response") {
-                stoicResponse = ""
-                isLoading = true
-                getStoicResponse()
+                fetchStoicResponse()
             }
             .disabled(isLoading || userContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            .accessibilityLabel("Get Stoic Response")
 
             if isLoading {
                 ProgressView("Loading...")
             } else {
-                Text(stoicResponse)
-                    .padding()
+                ScrollView {
+                    Text(stoicResponse)
+                        .padding()
+                }
             }
         }
     }
 
-    private func getStoicResponse() {
+    private func fetchStoicResponse() {
+        stoicResponse = ""
+        isLoading = true
+
         openAIService.generateStoicResponse(from: userContent)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -64,7 +66,6 @@ struct StoicResponseView: View {
 
 struct StoicResponseView_Previews: PreviewProvider {
     static var previews: some View {
-        StoicResponseView()
+        StoicResponseView(openAIService: OpenAIService())
     }
 }
-
