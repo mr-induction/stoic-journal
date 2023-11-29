@@ -1,59 +1,50 @@
 import SwiftUI
 import FirebaseAuth
 
-
 struct RegistrationView: View {
-    @StateObject private var authManager = AuthenticationManager()
-    @State private var email = ""
-    @State private var password = ""
-    @State private var errorMessage: String?
-    @State private var showingLogin = false
+    @State private var email = "" // State variable to hold the email input
+    @State private var password = "" // State variable to hold the password input
+    @State private var isUserAuthenticated = false
     
     var body: some View {
-        VStack {
-            if showingLogin {
-                LoginView() // Assuming LoginView is another struct conforming to View
-            } else {
-                registrationForm
+        NavigationView {
+            VStack {
+                TextField("Email", text: $email) // TextField for email input
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                SecureField("Password", text: $password) // SecureField for password input
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Register") {
+                    registerUser(email: email, password: password) // Pass the email and password to the register function
+                }
+                
+                NavigationLink(destination: HomeView(), isActive: $isUserAuthenticated) {
+                    EmptyView()
+                }
             }
         }
     }
     
-    private var registrationForm: some View {
-        Group {
-            TextField("Email", text: $email)
-                .autocapitalization(.none)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            errorMessageView
-            
-            registerButton
-        }
-    }
-    
-    private var errorMessageView: some View {
-        Group {
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-            }
-        }
-    }
-    
-    private var registerButton: some View {
-        Button("Register") {
-            registerUser()
-        }
-        .padding()
-    }
-    
-    private func registerUser() {
+    // Method to handle user registration
+    private func registerUser(email: String, password: String) {
+        print("Attempting to register user with email: \(email)")
+        
+        let authManager = AuthenticationManager()
+        
         authManager.registerUser(email: email, password: password) { error in
-            errorMessage = error?.localizedDescription
+            DispatchQueue.main.async { // Ensure UI updates are on the main thread
+                if let error = error {
+                    // Print the error if registration fails
+                    print("Registration failed with error: \(error.localizedDescription)")
+                } else {
+                    // If there is no error, assume registration was successful
+                    print("User registered successfully. Redirecting to HomeView...")
+                    self.isUserAuthenticated = true
+                }
+            }
         }
     }
 }
-

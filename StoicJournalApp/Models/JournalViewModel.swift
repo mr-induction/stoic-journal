@@ -8,22 +8,25 @@ class JournalViewModel: ObservableObject {
     @Published var moods: [Mood] = []
     @Published var entries: [JournalEntry] = []
 
-    private let db = Firestore.firestore()
+    private let db = Firestore.firestore() // Firestore database reference
 
     init() {
         loadEntries()
         loadMoods()
-        loadTags() // Added call to loadTags
+        loadTags()
     }
+  
 
-    func createJournalEntry(_ entry: JournalEntry, completion: @escaping (Error?) -> Void) {
-        do {
-            let _ = try db.collection("journalEntries").addDocument(from: entry)
-            completion(nil)
-        } catch {
-            completion(error)
+        func createJournalEntry(_ entry: JournalEntry, completion: @escaping (Error?) -> Void) {
+            do {
+                let _ = try db.collection("journalEntries").addDocument(from: entry, completion: { (error: Error?) in
+                    completion(error)
+                })
+            } catch let error {
+                completion(error)
+            }
         }
-    }
+
 
     func loadEntries() {
         db.collection("journalEntries")

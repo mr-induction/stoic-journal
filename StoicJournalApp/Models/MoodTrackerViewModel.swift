@@ -11,15 +11,14 @@ class MoodTrackerViewModel: ObservableObject {
     }
     
     func loadMoods() {
-        // Load moods from your source
-        // Replace this with real data loading logic
-        moods = [
-            Mood(id: UUID().uuidString, icon: "smiley", description: "Happy"),
-            Mood(id: UUID().uuidString, icon: "frown", description: "Sad"),
-            Mood(id: UUID().uuidString, icon: "angry", description: "Angry"),
-            // Add more moods as needed
-        ]
-    }
+            // Here we are simply creating a few example moods
+            moods = [
+                Mood(id: UUID().uuidString, icon: "heart.fill", description: "Loved"),
+                Mood(id: UUID().uuidString, icon: "cloud.rain.fill", description: "Sad"),
+                Mood(id: UUID().uuidString, icon: "bolt.fill", description: "Energetic"),
+                // Add more moods as needed
+            ]
+        }
     
     
     func loadMoodHistory() {

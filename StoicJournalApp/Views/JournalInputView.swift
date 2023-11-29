@@ -31,7 +31,7 @@ struct JournalInputView: View {
                 saveButton
                 viewEntriesButton
             }
-            .navigationBarTitle("Journal Entry", displayMode: .inline)
+            .navigationBarTitle("", displayMode: .inline)
             .alert(isPresented: $showConfirmationAlert) {
                 Alert(
                     title: Text("Entry Saved"),

@@ -10,7 +10,6 @@
 		0A135CFD2B030E8C00ED4A34 /* JournalEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135CFC2B030E8C00ED4A34 /* JournalEntryModel.swift */; };
 		0A135CFF2B031EBA00ED4A34 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135CFE2B031EBA00ED4A34 /* OpenAIService.swift */; };
 		0A135D012B03206300ED4A34 /* StoicResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D002B03206300ED4A34 /* StoicResponseView.swift */; };
-		0A135D032B032AAA00ED4A34 /* CombinedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D022B032AAA00ED4A34 /* CombinedView.swift */; };
 		0A135D052B03F07A00ED4A34 /* JournalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D042B03F07A00ED4A34 /* JournalViewModel.swift */; };
 		0A135D072B040F9A00ED4A34 /* StoicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A135D062B040F9A00ED4A34 /* StoicTheme.swift */; };
 		0A1992932B054D77002470BB /* IdentifiableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1992922B054D77002470BB /* IdentifiableError.swift */; };
@@ -19,6 +18,7 @@
 		0A1992992B0561DC002470BB /* StoicQuoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1992982B0561DC002470BB /* StoicQuoteViewModel.swift */; };
 		0A19929B2B0563C2002470BB /* SaveButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A19929A2B0563C2002470BB /* SaveButtonView.swift */; };
 		0A19929F2B0566FE002470BB /* TagPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A19929E2B0566FE002470BB /* TagPickerView.swift */; };
+		0A1A777F2B142E4C00B203BA /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A777E2B142E4C00B203BA /* SessionStore.swift */; };
 		0A4393972B02A1BF0032C862 /* JournalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4393962B02A1BF0032C862 /* JournalListView.swift */; };
 		0A43939B2B02ADBA0032C862 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43939A2B02ADBA0032C862 /* FirebaseManager.swift */; };
 		0A47666F2B0168CF00B53995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47666E2B0168CF00B53995 /* AppDelegate.swift */; };
@@ -47,7 +47,6 @@
 		0ADD88572B06AB3C00F02CE2 /* JournalEntryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88562B06AB3C00F02CE2 /* JournalEntryHeaderView.swift */; };
 		0ADD885B2B06B16500F02CE2 /* JournalEntryContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD885A2B06B16500F02CE2 /* JournalEntryContentView.swift */; };
 		0ADD885F2B06D9C800F02CE2 /* JournalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD885E2B06D9C800F02CE2 /* JournalData.swift */; };
-		0ADD88632B06E23800F02CE2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88622B06E23800F02CE2 /* MainView.swift */; };
 		0ADD88652B0A8B9A00F02CE2 /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88642B0A8B9A00F02CE2 /* RegistrationView.swift */; };
 		0ADD88672B0A8BB800F02CE2 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88662B0A8BB800F02CE2 /* LoginView.swift */; };
 		0ADD88692B0A8C9200F02CE2 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88682B0A8C9200F02CE2 /* AuthenticationManager.swift */; };
@@ -57,6 +56,10 @@
 		0ADD88732B0B1EF200F02CE2 /* MoodTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88722B0B1EF200F02CE2 /* MoodTrackerView.swift */; };
 		0ADD88752B0B240800F02CE2 /* MoodTrackerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88742B0B240800F02CE2 /* MoodTrackerViewModel.swift */; };
 		0ADD88772B0B27DF00F02CE2 /* AddGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88762B0B27DF00F02CE2 /* AddGoalView.swift */; };
+		0AFC2AE82B152973004B6D87 /* JournalDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */; };
+		0AFC2AEA2B1545B7004B6D87 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */; };
+		0AFC2AEC2B16600A004B6D87 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AEB2B16600A004B6D87 /* MenuView.swift */; };
+		0AFC2AEE2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,7 +83,6 @@
 		0A135CFC2B030E8C00ED4A34 /* JournalEntryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryModel.swift; sourceTree = "<group>"; };
 		0A135CFE2B031EBA00ED4A34 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		0A135D002B03206300ED4A34 /* StoicResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoicResponseView.swift; path = StoicJournalApp/Views/StoicResponseView.swift; sourceTree = SOURCE_ROOT; };
-		0A135D022B032AAA00ED4A34 /* CombinedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CombinedView.swift; path = StoicJournalApp/Views/CombinedView.swift; sourceTree = SOURCE_ROOT; };
 		0A135D042B03F07A00ED4A34 /* JournalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewModel.swift; sourceTree = "<group>"; };
 		0A135D062B040F9A00ED4A34 /* StoicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoicTheme.swift; path = StoicJournalApp/Models/StoicTheme.swift; sourceTree = SOURCE_ROOT; };
 		0A1992922B054D77002470BB /* IdentifiableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableError.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		0A1992982B0561DC002470BB /* StoicQuoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoicQuoteViewModel.swift; sourceTree = "<group>"; };
 		0A19929A2B0563C2002470BB /* SaveButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonView.swift; sourceTree = "<group>"; };
 		0A19929E2B0566FE002470BB /* TagPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPickerView.swift; sourceTree = "<group>"; };
+		0A1A777E2B142E4C00B203BA /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		0A4393962B02A1BF0032C862 /* JournalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalListView.swift; sourceTree = "<group>"; };
 		0A43939A2B02ADBA0032C862 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		0A47666E2B0168CF00B53995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -116,7 +119,6 @@
 		0ADD88562B06AB3C00F02CE2 /* JournalEntryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryHeaderView.swift; sourceTree = "<group>"; };
 		0ADD885A2B06B16500F02CE2 /* JournalEntryContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryContentView.swift; sourceTree = "<group>"; };
 		0ADD885E2B06D9C800F02CE2 /* JournalData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalData.swift; sourceTree = SOURCE_ROOT; };
-		0ADD88622B06E23800F02CE2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		0ADD88642B0A8B9A00F02CE2 /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RegistrationView.swift; path = StoicJournalApp/Models/RegistrationView.swift; sourceTree = SOURCE_ROOT; };
 		0ADD88662B0A8BB800F02CE2 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		0ADD88682B0A8C9200F02CE2 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = SOURCE_ROOT; };
@@ -126,6 +128,10 @@
 		0ADD88722B0B1EF200F02CE2 /* MoodTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodTrackerView.swift; sourceTree = "<group>"; };
 		0ADD88742B0B240800F02CE2 /* MoodTrackerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MoodTrackerViewModel.swift; path = StoicJournalApp/Models/MoodTrackerViewModel.swift; sourceTree = SOURCE_ROOT; };
 		0ADD88762B0B27DF00F02CE2 /* AddGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGoalView.swift; sourceTree = "<group>"; };
+		0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalDetailViewModel.swift; sourceTree = SOURCE_ROOT; };
+		0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		0AFC2AEB2B16600A004B6D87 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuoteViewWithBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +166,8 @@
 		0A4766702B0168D900B53995 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */,
+				0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */,
 				0ACFA68D2B13FADE002B73AA /* DebugModifier.swift */,
 				0A85B93C2B0C4141006E181C /* Mood.swift */,
 				0ADD88742B0B240800F02CE2 /* MoodTrackerViewModel.swift */,
@@ -167,6 +175,7 @@
 				0ADD88682B0A8C9200F02CE2 /* AuthenticationManager.swift */,
 				0ADD885E2B06D9C800F02CE2 /* JournalData.swift */,
 				0A47666E2B0168CF00B53995 /* AppDelegate.swift */,
+				0A1A777E2B142E4C00B203BA /* SessionStore.swift */,
 				0ADBB6762B11A63400673229 /* GoalViewModel.swift */,
 				0A4766722B01F3E900B53995 /* JournalEntryForm.swift */,
 				0A135D062B040F9A00ED4A34 /* StoicTheme.swift */,
@@ -183,6 +192,8 @@
 		0A4766712B0168F000B53995 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */,
+				0AFC2AEB2B16600A004B6D87 /* MenuView.swift */,
 				0A85B93A2B0C3416006E181C /* Journal.swift */,
 				0A85B9322B0BBAEF006E181C /* GoalDetailView.swift */,
 				0ADD886E2B0A9F4000F02CE2 /* GoalTrackingView.swift */,
@@ -193,7 +204,6 @@
 				0ADD88722B0B1EF200F02CE2 /* MoodTrackerView.swift */,
 				0A4393962B02A1BF0032C862 /* JournalListView.swift */,
 				0A85B9382B0C06A7006E181C /* JournalDetailView.swift */,
-				0A135D022B032AAA00ED4A34 /* CombinedView.swift */,
 				0A19929E2B0566FE002470BB /* TagPickerView.swift */,
 				0A1992942B056087002470BB /* StoicQuotes.swift */,
 				0A1992962B0560AE002470BB /* DailyQuoteView.swift */,
@@ -206,7 +216,6 @@
 				0A91588F2B013E7A00284492 /* ContentView.swift */,
 				0ADD886A2B0A9D8600F02CE2 /* OnboardingView.swift */,
 				0ADD886C2B0A9D9C00F02CE2 /* HomeView.swift */,
-				0ADD88622B06E23800F02CE2 /* MainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -412,11 +421,11 @@
 				0ADD88572B06AB3C00F02CE2 /* JournalEntryHeaderView.swift in Sources */,
 				0ADD885F2B06D9C800F02CE2 /* JournalData.swift in Sources */,
 				0A135D052B03F07A00ED4A34 /* JournalViewModel.swift in Sources */,
-				0A135D032B032AAA00ED4A34 /* CombinedView.swift in Sources */,
 				0A85B9332B0BBAEF006E181C /* GoalDetailView.swift in Sources */,
 				0ADD886D2B0A9D9C00F02CE2 /* HomeView.swift in Sources */,
 				0A85B9352B0BBD13006E181C /* Goal.swift in Sources */,
 				0A4393972B02A1BF0032C862 /* JournalListView.swift in Sources */,
+				0AFC2AEC2B16600A004B6D87 /* MenuView.swift in Sources */,
 				0ADD886F2B0A9F4000F02CE2 /* GoalTrackingView.swift in Sources */,
 				0ADD88772B0B27DF00F02CE2 /* AddGoalView.swift in Sources */,
 				0A85B9372B0BC2AC006E181C /* GoalRowView.swift in Sources */,
@@ -424,7 +433,6 @@
 				0A135D012B03206300ED4A34 /* StoicResponseView.swift in Sources */,
 				0A1992932B054D77002470BB /* IdentifiableError.swift in Sources */,
 				0ADD88752B0B240800F02CE2 /* MoodTrackerViewModel.swift in Sources */,
-				0ADD88632B06E23800F02CE2 /* MainView.swift in Sources */,
 				0A19929F2B0566FE002470BB /* TagPickerView.swift in Sources */,
 				0ADD886B2B0A9D8600F02CE2 /* OnboardingView.swift in Sources */,
 				0A47666F2B0168CF00B53995 /* AppDelegate.swift in Sources */,
@@ -437,12 +445,16 @@
 				0A135CFD2B030E8C00ED4A34 /* JournalEntryModel.swift in Sources */,
 				0A9158902B013E7A00284492 /* ContentView.swift in Sources */,
 				0ADD88732B0B1EF200F02CE2 /* MoodTrackerView.swift in Sources */,
+				0A1A777F2B142E4C00B203BA /* SessionStore.swift in Sources */,
 				0ACFA68E2B13FADE002B73AA /* DebugModifier.swift in Sources */,
+				0AFC2AEA2B1545B7004B6D87 /* AuthViewModel.swift in Sources */,
 				0ADD88692B0A8C9200F02CE2 /* AuthenticationManager.swift in Sources */,
 				0ADD88552B06AB2000F02CE2 /* JournalEntryFooterView.swift in Sources */,
+				0AFC2AEE2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift in Sources */,
 				0A19929B2B0563C2002470BB /* SaveButtonView.swift in Sources */,
 				0A135D072B040F9A00ED4A34 /* StoicTheme.swift in Sources */,
 				0ADD88652B0A8B9A00F02CE2 /* RegistrationView.swift in Sources */,
+				0AFC2AE82B152973004B6D87 /* JournalDetailViewModel.swift in Sources */,
 				0A4766732B01F3E900B53995 /* JournalEntryForm.swift in Sources */,
 				0A85B93B2B0C3416006E181C /* Journal.swift in Sources */,
 				0ADBB6772B11A63400673229 /* GoalViewModel.swift in Sources */,

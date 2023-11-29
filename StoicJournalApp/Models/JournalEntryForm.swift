@@ -34,6 +34,10 @@ struct JournalEntryForm: View {
                 }
                 
                 Section(header: Text("Tags")) {
+                    // Debugging: Print the number of tags
+                    Text("Number of tags available: \(tags.count)")
+                        .foregroundColor(.red)
+
                     Picker("Select a Tag", selection: $selectedTag) {
                         Text("None").tag(nil as JournalTag?)
                         ForEach(tags, id: \.id) { tag in
@@ -59,7 +63,10 @@ struct JournalEntryForm: View {
             }
             .navigationBarTitle("Journal Entry", displayMode: .inline)
             .onAppear {
-                print("JournalEntryForm appeared") // Debugging statement
+                // Debugging: Check if view appeared
+                print("JournalEntryForm appeared")
+                // Debugging: Print the tags to see if they are being passed correctly
+                print("Tags passed to JournalEntryForm: \(tags)")
             }
         }
     }
@@ -70,18 +77,4 @@ struct JournalEntryForm: View {
     }
 }
 
-// Preview provider with sample data
-struct JournalEntryForm_Previews: PreviewProvider {
-    static var previews: some View {
-        JournalEntryForm(
-            title: .constant(""),
-            content: .constant(""),
-            selectedTag: .constant(nil),
-            selectedMood: .constant(nil),
-            tags: [JournalTag(id: "1", name: "Happy"), JournalTag(id: "2", name: "Sad")],
-            moods: [Mood(id: "1", icon: "sun.max", description: "Joyful"), Mood(id: "2", icon: "cloud", description: "Gloomy")],
-            journalPrompts: ["What are you grateful for?", "What made you smile today?"] // Sample journal prompts
-        )
-    }
-}
-
+// Rest of your code remains the same
