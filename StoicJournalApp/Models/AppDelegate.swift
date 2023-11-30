@@ -32,9 +32,9 @@ struct StoicJournalApp: App {
                     .environmentObject(authenticationManager) // Provide AuthenticationManager
             }
         }
-        .onChange(of: scenePhase) { phase in
+        .onChange(of: scenePhase) { newScenePhase in
             // Handle lifecycle changes
-            switch phase {
+            switch newScenePhase {
             case .background:
                 print("App moved to background")
             case .inactive:

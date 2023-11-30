@@ -58,7 +58,6 @@
 		0ADD88772B0B27DF00F02CE2 /* AddGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD88762B0B27DF00F02CE2 /* AddGoalView.swift */; };
 		0AFC2AE82B152973004B6D87 /* JournalDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */; };
 		0AFC2AEA2B1545B7004B6D87 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */; };
-		0AFC2AEC2B16600A004B6D87 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AEB2B16600A004B6D87 /* MenuView.swift */; };
 		0AFC2AEE2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */; };
 		0AFC2AF02B17AB3D004B6D87 /* JournalEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AEF2B17AB3D004B6D87 /* JournalEntryViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -131,7 +130,6 @@
 		0ADD88762B0B27DF00F02CE2 /* AddGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGoalView.swift; sourceTree = "<group>"; };
 		0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalDetailViewModel.swift; sourceTree = SOURCE_ROOT; };
 		0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		0AFC2AEB2B16600A004B6D87 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuoteViewWithBackground.swift; sourceTree = "<group>"; };
 		0AFC2AEF2B17AB3D004B6D87 /* JournalEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -196,7 +194,6 @@
 			isa = PBXGroup;
 			children = (
 				0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */,
-				0AFC2AEB2B16600A004B6D87 /* MenuView.swift */,
 				0A85B93A2B0C3416006E181C /* Journal.swift */,
 				0A85B9322B0BBAEF006E181C /* GoalDetailView.swift */,
 				0ADD886E2B0A9F4000F02CE2 /* GoalTrackingView.swift */,
@@ -428,7 +425,6 @@
 				0ADD886D2B0A9D9C00F02CE2 /* HomeView.swift in Sources */,
 				0A85B9352B0BBD13006E181C /* Goal.swift in Sources */,
 				0A4393972B02A1BF0032C862 /* JournalListView.swift in Sources */,
-				0AFC2AEC2B16600A004B6D87 /* MenuView.swift in Sources */,
 				0ADD886F2B0A9F4000F02CE2 /* GoalTrackingView.swift in Sources */,
 				0ADD88772B0B27DF00F02CE2 /* AddGoalView.swift in Sources */,
 				0A85B9372B0BC2AC006E181C /* GoalRowView.swift in Sources */,

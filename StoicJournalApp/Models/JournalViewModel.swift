@@ -8,120 +8,80 @@ class JournalViewModel: ObservableObject {
     @Published var moods: [Mood] = []
     @Published var entries: [JournalEntry] = []
 
-    private let db = Firestore.firestore() // Firestore database reference
+    private let db = Firestore.firestore() // Single Firestore database reference
 
     init() {
-        loadEntries()
-        loadMoods()
-        loadTags()
+        loadAllData()
     }
 
-    func createJournalEntry(_ entry: JournalEntry, completion: @escaping (Error?) -> Void) {
+    func createOrUpdateJournalEntry(_ entry: JournalEntry, isUpdate: Bool, completion: @escaping (Error?) -> Void) {
+        let operation = isUpdate ? "updated" : "created"
+
         do {
-            let _ = try db.collection("journalEntries").addDocument(from: entry, completion: { error in
-                completion(error)
-                if error == nil {
-                    print("Journal entry created successfully")
+            let data = try Firestore.Encoder().encode(entry)
+
+            if isUpdate {
+                guard let documentId = entry.documentId else {
+                    completion(NSError(domain: "AppError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Document ID is missing for update."]))
+                    return
                 }
-            })
+                db.collection("journalEntries").document(documentId).setData(data) { error in
+                    self.handleCompletion(error, entry, operation, isUpdate, completion)
+                }
+            } else {
+                db.collection("journalEntries").addDocument(data: data) { error in
+                    self.handleCompletion(error, entry, operation, isUpdate, completion)
+                }
+            }
         } catch let error {
             completion(error)
         }
     }
 
-    func loadEntries() {
-        db.collection("journalEntries")
-            .order(by: "date", descending: true)
-            .addSnapshotListener { [weak self] querySnapshot, error in
-                guard let self = self else { return }
+    private func handleCompletion(_ error: Error?, _ entry: JournalEntry, _ operation: String, _ isUpdate: Bool, _ completion: @escaping (Error?) -> Void) {
+        completion(error)
+        if error == nil {
+            print("Journal entry \(operation) successfully")
+            updateLocalEntries(entry, isUpdate: isUpdate)
+        }
+    }
 
-                if let error = error {
-                    print("Error fetching documents: \(error.localizedDescription)")
-                    return
-                }
+    func loadAllData() {
+        loadCollection("journalEntries", type: JournalEntry.self) { self.entries = $0 }
+        loadCollection("moods", type: Mood.self) { self.moods = $0 }
+        loadCollection("tags", type: JournalTag.self, documentToType: { JournalTag(id: $0.documentID, name: $0.get("name") as? String ?? "") }) { self.tags = $0 }
+    }
 
-                DispatchQueue.main.async {
-                    self.entries = querySnapshot?.documents.compactMap { document -> JournalEntry? in
-                        do {
-                            return try document.data(as: JournalEntry.self)
-                        } catch {
-                            print("Error decoding document: \(document.documentID), error: \(error)")
-                            return nil
-                        }
-                    } ?? []
+    func loadCollection<T: Decodable>(_ collection: String, type: T.Type, documentToType: ((QueryDocumentSnapshot) -> T)? = nil, completion: @escaping ([T]) -> Void) {
+        db.collection(collection).getDocuments { querySnapshot, error in
+            guard let documents = querySnapshot?.documents, error == nil else {
+                print("Error fetching \(collection): \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
 
-                    if !self.entries.isEmpty {
-                        print("Fetched \(self.entries.count) entries")
-                    } else {
-                        print("No entries found")
-                    }
+            let results: [T] = documents.compactMap { document in
+                if let documentToType = documentToType {
+                    return documentToType(document)
+                } else {
+                    return try? document.data(as: type)
                 }
             }
+            DispatchQueue.main.async {
+                completion(results)
+                print("Loaded \(collection): \(results)")
+            }
+        }
     }
-    func saveMood(mood: Mood) {
-        // Reference to the Firestore database
-        let db = Firestore.firestore()
 
-        // Convert the Mood object into a dictionary for Firestore
-        let moodData: [String: Any] = [
-            "id": mood.id,
-          
-            // Add other properties of the Mood object here if necessary
-        ]
-
-        // Add the mood to the "moods" collection in Firestore
-        db.collection("moods").document(mood.id).setData(moodData) { error in
-            if let error = error {
-                // If there's an error, print it out
-                print("Error saving mood: \(error.localizedDescription)")
+    private func updateLocalEntries(_ entry: JournalEntry, isUpdate: Bool) {
+        DispatchQueue.main.async {
+            if isUpdate, let index = self.entries.firstIndex(where: { $0.documentId == entry.documentId }) {
+                self.entries[index] = entry
             } else {
-                // If the save is successful, print out a success message
-                print("Mood successfully saved")
+                self.entries.insert(entry, at: 0)
             }
         }
     }
-    func loadMoods() {
-        db.collection("moods")
-            .getDocuments { [weak self] querySnapshot, error in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("Error fetching moods: \(error.localizedDescription)")
-                    return
-                }
-
-                DispatchQueue.main.async {
-                    self.moods = querySnapshot?.documents.compactMap { document -> Mood? in
-                        try? document.data(as: Mood.self)
-                    } ?? []
-
-                    print("Loaded moods: \(self.moods)")
-                }
-            }
-    }
-
-  
-    func loadTags() {
-            db.collection("tags")
-                .getDocuments { [weak self] querySnapshot, error in
-                    guard let self = self else { return }
-
-                    if let error = error {
-                        print("Error fetching tags: \(error.localizedDescription)")
-                        return
-                    }
-
-                    DispatchQueue.main.async {
-                        self.tags = querySnapshot?.documents.compactMap { document -> JournalTag? in
-                            let id = document.documentID
-                            let name = document.get("name") as? String ?? ""
-                            return JournalTag(id: id, name: name)
-                        } ?? []
-
-                        print("Loaded tags: \(self.tags)")
-                    }
-                }
-        }
 
     func deleteJournalEntry(entry: JournalEntry) {
         guard let documentId = entry.documentId else {
@@ -129,16 +89,12 @@ class JournalViewModel: ObservableObject {
             return
         }
 
-        db.collection("journalEntries").document(documentId).delete { [weak self] error in
-            guard let self = self else { return }
-
+        db.collection("journalEntries").document(documentId).delete { error in
             if let error = error {
                 print("Error removing journal entry: \(error)")
             } else {
-                DispatchQueue.main.async {
-                    self.entries.removeAll { $0.documentId == documentId }
-                    print("Journal entry deleted successfully")
-                }
+                self.entries.removeAll { $0.documentId == documentId }
+                print("Journal entry deleted successfully")
             }
         }
     }
@@ -153,15 +109,12 @@ class JournalViewModel: ObservableObject {
             let data = try Firestore.Encoder().encode(entry)
             db.collection("journalEntries").document(documentId).setData(data, merge: true) { error in
                 if let error = error {
-                    print("Error updating journal entry: \(error.localizedDescription)")
+                    print("Error updating journal entry: \(error)")
                 } else {
-                    print("Journal entry updated successfully in Firestore")
-                    DispatchQueue.main.async {
-                        if let index = self.entries.firstIndex(where: { $0.documentId == documentId }) {
+                    if let index = self.entries.firstIndex(where: { $0.documentId == documentId }) {
+                        DispatchQueue.main.async {
                             self.entries[index] = entry
-                            print("Journal entry updated successfully in the local array")
-                        } else {
-                            print("Updated entry not found in the local array")
+                            print("Journal entry updated successfully")
                         }
                     }
                 }
@@ -171,6 +124,6 @@ class JournalViewModel: ObservableObject {
         }
     }
 
-    // Add other methods if any...
+    // Additional methods...
 }
 
