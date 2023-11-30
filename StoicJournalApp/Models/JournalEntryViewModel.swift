@@ -1,10 +1,3 @@
-//
-//  JournalEntryViewModel.swift
-//  StoicJournalApp
-//
-//  Created by Rin Otori on 11/29/23.
-//
-
 import SwiftUI
 
 class JournalEntryViewModel: ObservableObject {
@@ -23,7 +16,6 @@ class JournalEntryViewModel: ObservableObject {
     func saveJournalEntry() {
         self.isSaving = true
 
-        // Corrected Tag Conversion Logic
         let entryTags: [Tag] = selectedTag.map { convertJournalTagToTag(journalTag: $0) } ?? []
         let moodId = selectedMood?.id ?? ""
 
@@ -50,7 +42,6 @@ class JournalEntryViewModel: ObservableObject {
         }
     }
 
-    // Added resetFormFields Method
     private func resetFormFields() {
         self.title = ""
         self.content = ""
@@ -58,6 +49,24 @@ class JournalEntryViewModel: ObservableObject {
         self.selectedMood = nil
     }
 
+    // Function to update the current entry with the Stoic Response
+    func updateStoicResponse(stoicResponse: String, for entry: JournalEntry) {
+        var updatedEntry = entry
+        updatedEntry.stoicResponse = stoicResponse // Set the Stoic Response
+
+        // Call the update function in the JournalViewModel
+        journalViewModel.updateJournalEntry(entry: updatedEntry)
+    }
+    
+    func printCurrentEntry(entry: JournalEntry) {
+        print("""
+              Entry ID: \(entry.id)
+              Title: \(entry.title)
+              Content: \(entry.content)
+              Stoic Response: \(entry.stoicResponse ?? "No response")
+              """)
+    }
+
+
     // Additional functions as needed
 }
-

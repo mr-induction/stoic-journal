@@ -7,8 +7,13 @@
 
 import Foundation
 
-struct Mood: Identifiable, Encodable, Hashable {
-    let id: String
-    let icon: String
-    let description: String
+struct Mood: Codable, Identifiable, Hashable {
+    var id: String
+    var icon: String
+    var description: String
+
+    // Hashable conformance
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }

@@ -15,8 +15,9 @@ struct JournalListView: View {
 
     var body: some View {
         List {
-            ForEach(journalViewModel.entries, id: \.id) { entry in
-                NavigationLink(destination: JournalDetailView(entry: entry)) {
+            ForEach(journalViewModel.entries.indices, id: \.self) { index in
+                let entry = journalViewModel.entries[index]
+                NavigationLink(destination: JournalDetailView(journalViewModel: journalViewModel, entryIndex: index)) {
                     VStack(alignment: .leading) {
                         Text(entry.title)
                             .font(.headline)
@@ -29,6 +30,14 @@ struct JournalListView: View {
                         Text(entry.content)
                             .font(.subheadline)
                             .lineLimit(1)
+
+                        // Display Stoic Response if available
+                        if let stoicResponse = entry.stoicResponse {
+                            Text("Stoic Response: \(stoicResponse)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                        }
                     }
                 }
             }

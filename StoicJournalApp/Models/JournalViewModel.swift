@@ -15,18 +15,19 @@ class JournalViewModel: ObservableObject {
         loadMoods()
         loadTags()
     }
-  
 
-        func createJournalEntry(_ entry: JournalEntry, completion: @escaping (Error?) -> Void) {
-            do {
-                let _ = try db.collection("journalEntries").addDocument(from: entry, completion: { (error: Error?) in
-                    completion(error)
-                })
-            } catch let error {
+    func createJournalEntry(_ entry: JournalEntry, completion: @escaping (Error?) -> Void) {
+        do {
+            let _ = try db.collection("journalEntries").addDocument(from: entry, completion: { error in
                 completion(error)
-            }
+                if error == nil {
+                    print("Journal entry created successfully")
+                }
+            })
+        } catch let error {
+            completion(error)
         }
-
+    }
 
     func loadEntries() {
         db.collection("journalEntries")
@@ -49,7 +50,6 @@ class JournalViewModel: ObservableObject {
                         }
                     } ?? []
 
-                    // Now the check for empty array doesn't need conditional binding
                     if !self.entries.isEmpty {
                         print("Fetched \(self.entries.count) entries")
                     } else {
@@ -58,48 +58,74 @@ class JournalViewModel: ObservableObject {
                 }
             }
     }
+    func saveMood(mood: Mood) {
+        // Reference to the Firestore database
+        let db = Firestore.firestore()
 
-
-    func loadMoods() {
-        // Load moods from Firebase or local data
-        // Example moods, replace with actual mood data from Firebase if needed
-        moods = [
-            Mood(id: "1", icon: "", description: "Happy"),
-            Mood(id: "2", icon: "", description: "Sad"),
-            // Add more moods as needed
+        // Convert the Mood object into a dictionary for Firestore
+        let moodData: [String: Any] = [
+            "id": mood.id,
+          
+            // Add other properties of the Mood object here if necessary
         ]
+
+        // Add the mood to the "moods" collection in Firestore
+        db.collection("moods").document(mood.id).setData(moodData) { error in
+            if let error = error {
+                // If there's an error, print it out
+                print("Error saving mood: \(error.localizedDescription)")
+            } else {
+                // If the save is successful, print out a success message
+                print("Mood successfully saved")
+            }
+        }
     }
-
-
-
-    // New function to load tags
-    func loadTags() {
-        db.collection("tags")
+    func loadMoods() {
+        db.collection("moods")
             .getDocuments { [weak self] querySnapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("Error fetching tags: \(error.localizedDescription)")
+                    print("Error fetching moods: \(error.localizedDescription)")
                     return
                 }
 
                 DispatchQueue.main.async {
-                    self.tags = querySnapshot?.documents.compactMap { document -> JournalTag? in
-                        let id = document.documentID
-                        let name = document.get("name") as? String ?? ""
-                        return JournalTag(id: id, name: name)
+                    self.moods = querySnapshot?.documents.compactMap { document -> Mood? in
+                        try? document.data(as: Mood.self)
                     } ?? []
 
-                    // Debug print
-                    print("Loaded tags: \(self.tags)")
+                    print("Loaded moods: \(self.moods)")
                 }
             }
     }
 
+  
+    func loadTags() {
+            db.collection("tags")
+                .getDocuments { [weak self] querySnapshot, error in
+                    guard let self = self else { return }
+
+                    if let error = error {
+                        print("Error fetching tags: \(error.localizedDescription)")
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        self.tags = querySnapshot?.documents.compactMap { document -> JournalTag? in
+                            let id = document.documentID
+                            let name = document.get("name") as? String ?? ""
+                            return JournalTag(id: id, name: name)
+                        } ?? []
+
+                        print("Loaded tags: \(self.tags)")
+                    }
+                }
+        }
 
     func deleteJournalEntry(entry: JournalEntry) {
         guard let documentId = entry.documentId else {
-            print("Document ID not found")
+            print("Document ID not found for delete operation")
             return
         }
 
@@ -111,29 +137,40 @@ class JournalViewModel: ObservableObject {
             } else {
                 DispatchQueue.main.async {
                     self.entries.removeAll { $0.documentId == documentId }
+                    print("Journal entry deleted successfully")
                 }
             }
         }
     }
 
-    func saveMood(moodId: String) {
-        guard let mood = moods.first(where: { $0.id == moodId }) else { return }
-        let userId = Auth.auth().currentUser?.uid ?? "unknown"
+    func updateJournalEntry(entry: JournalEntry) {
+        guard let documentId = entry.documentId else {
+            print("Document ID not found for update operation")
+            return
+        }
 
-        let moodData: [String: Any] = [
-            "userId": userId,
-            "moodDescription": mood.description,
-            "moodIcon": mood.icon,
-            "timestamp": Timestamp(date: Date())
-        ]
-
-        db.collection("moodEntries").addDocument(data: moodData) { error in
-            if let error = error {
-                print("Error saving mood: \(error.localizedDescription)")
-            } else {
-                print("Mood saved successfully")
+        do {
+            let data = try Firestore.Encoder().encode(entry)
+            db.collection("journalEntries").document(documentId).setData(data, merge: true) { error in
+                if let error = error {
+                    print("Error updating journal entry: \(error.localizedDescription)")
+                } else {
+                    print("Journal entry updated successfully in Firestore")
+                    DispatchQueue.main.async {
+                        if let index = self.entries.firstIndex(where: { $0.documentId == documentId }) {
+                            self.entries[index] = entry
+                            print("Journal entry updated successfully in the local array")
+                        } else {
+                            print("Updated entry not found in the local array")
+                        }
+                    }
+                }
             }
+        } catch let error {
+            print("Error encoding entry for update: \(error)")
         }
     }
+
+    // Add other methods if any...
 }
 

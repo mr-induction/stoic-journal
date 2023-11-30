@@ -4,6 +4,9 @@ struct JournalInputView: View {
     @StateObject private var entryViewModel: JournalEntryViewModel
     @State private var showConfirmationAlert: Bool = false
     @ObservedObject var journalViewModel: JournalViewModel
+    
+    // Create an instance of MoodTrackerViewModel
+    @StateObject private var moodTrackerViewModel = MoodTrackerViewModel()
 
     // Define a static array of journal prompts
     private let journalPrompts = [
@@ -20,14 +23,15 @@ struct JournalInputView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // Pass the MoodTrackerViewModel instance to the JournalEntryForm
                 JournalEntryForm(
                     title: $entryViewModel.title,
                     content: $entryViewModel.content,
                     selectedTag: $entryViewModel.selectedTag,
                     selectedMood: $entryViewModel.selectedMood,
-                    tags: journalViewModel.tags,
-                    moods: journalViewModel.moods,
-                    journalPrompts: journalPrompts
+                    viewModel: moodTrackerViewModel, tags: journalViewModel.tags,
+                    // Remove the moods parameter if it's no longer needed here
+                    journalPrompts: journalPrompts // Pass the view model here
                 )
                 SaveButtonView(isLoading: $entryViewModel.isSaving) {
                     entryViewModel.saveJournalEntry()
