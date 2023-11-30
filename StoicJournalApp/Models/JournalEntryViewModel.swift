@@ -60,7 +60,7 @@ class JournalEntryViewModel: ObservableObject {
     
     func printCurrentEntry(entry: JournalEntry) {
         print("""
-              Entry ID: \(entry.id)
+              Entry ID: \(String(describing: entry.id))
               Title: \(entry.title)
               Content: \(entry.content)
               Stoic Response: \(entry.stoicResponse ?? "No response")
