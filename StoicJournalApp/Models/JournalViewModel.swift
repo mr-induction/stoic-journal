@@ -15,10 +15,9 @@ class JournalViewModel: ObservableObject {
     }
 
     func createOrUpdateJournalEntry(_ entry: JournalEntry, isUpdate: Bool, completion: @escaping (Error?) -> Void) {
-        let operation = isUpdate ? "updated" : "created"
-
         do {
-            let data = try Firestore.Encoder().encode(entry)
+            var entryToSave = entry
+            let data = try Firestore.Encoder().encode(entryToSave)
 
             if isUpdate {
                 guard let documentId = entry.documentId else {
@@ -26,17 +25,20 @@ class JournalViewModel: ObservableObject {
                     return
                 }
                 db.collection("journalEntries").document(documentId).setData(data) { error in
-                    self.handleCompletion(error, entry, operation, isUpdate, completion)
+                    self.handleCompletion(error, entryToSave, "updated", isUpdate, completion)
                 }
             } else {
-                db.collection("journalEntries").addDocument(data: data) { error in
-                    self.handleCompletion(error, entry, operation, isUpdate, completion)
+                let documentRef = db.collection("journalEntries").document()
+                entryToSave.documentId = documentRef.documentID
+                documentRef.setData(data) { error in
+                    self.handleCompletion(error, entryToSave, "created", isUpdate, completion)
                 }
             }
         } catch let error {
             completion(error)
         }
     }
+
 
     private func handleCompletion(_ error: Error?, _ entry: JournalEntry, _ operation: String, _ isUpdate: Bool, _ completion: @escaping (Error?) -> Void) {
         completion(error)
@@ -99,28 +101,34 @@ class JournalViewModel: ObservableObject {
         }
     }
 
-    func updateJournalEntry(entry: JournalEntry) {
+    func updateJournalEntry(entry: JournalEntry, completion: @escaping (Bool) -> Void) {
         guard let documentId = entry.documentId else {
             print("Document ID not found for update operation")
+            completion(false)
             return
         }
 
         do {
             let data = try Firestore.Encoder().encode(entry)
             db.collection("journalEntries").document(documentId).setData(data, merge: true) { error in
-                if let error = error {
-                    print("Error updating journal entry: \(error)")
-                } else {
-                    if let index = self.entries.firstIndex(where: { $0.documentId == documentId }) {
-                        DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error updating journal entry: \(error)")
+                        completion(false)
+                    } else {
+                        if let index = self.entries.firstIndex(where: { $0.documentId == documentId }) {
                             self.entries[index] = entry
                             print("Journal entry updated successfully")
+                            completion(true)
+                        } else {
+                            completion(false)
                         }
                     }
                 }
             }
         } catch let error {
             print("Error encoding entry for update: \(error)")
+            completion(false)
         }
     }
 

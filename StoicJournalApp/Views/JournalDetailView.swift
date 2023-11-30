@@ -4,6 +4,9 @@ struct JournalDetailView: View {
     @ObservedObject var journalViewModel: JournalViewModel
     var entryIndex: Int // Index of the entry in the JournalViewModel's entries array
 
+    @StateObject private var viewModel = JournalDetailViewModel()
+    @State private var showUpdateConfirmation = false // State to track update confirmation
+
     // Computed property to bind to the journal entry
     private var entryBinding: Binding<JournalEntry> {
         Binding(
@@ -11,8 +14,6 @@ struct JournalDetailView: View {
             set: { self.journalViewModel.entries[self.entryIndex] = $0 }
         )
     }
-
-    @StateObject private var viewModel = JournalDetailViewModel()
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -60,13 +61,19 @@ struct JournalDetailView: View {
                     saveUpdatedEntry()
                 }
                 .padding()
+                .alert(isPresented: $showUpdateConfirmation) {
+                    Alert(title: Text("Update Successful"), message: Text("Your journal entry has been updated."), dismissButton: .default(Text("OK")))
+                }
             }
             .navigationBarTitle("Entry Details", displayMode: .inline)
         }
     }
 
     private func saveUpdatedEntry() {
-        journalViewModel.updateJournalEntry(entry: entryBinding.wrappedValue)
+        journalViewModel.updateJournalEntry(entry: entryBinding.wrappedValue) { success in
+            if success {
+                self.showUpdateConfirmation = true
+            }
+        }
     }
 }
-
