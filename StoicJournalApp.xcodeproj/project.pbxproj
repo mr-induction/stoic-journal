@@ -60,6 +60,7 @@
 		0AFC2AEA2B1545B7004B6D87 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */; };
 		0AFC2AEC2B16600A004B6D87 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AEB2B16600A004B6D87 /* MenuView.swift */; };
 		0AFC2AEE2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */; };
+		0AFC2AF02B17AB3D004B6D87 /* JournalEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC2AEF2B17AB3D004B6D87 /* JournalEntryViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,7 @@
 		0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		0AFC2AEB2B16600A004B6D87 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		0AFC2AED2B1660A8004B6D87 /* DailyQuoteViewWithBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuoteViewWithBackground.swift; sourceTree = "<group>"; };
+		0AFC2AEF2B17AB3D004B6D87 /* JournalEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 		0A4766702B0168D900B53995 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0AFC2AEF2B17AB3D004B6D87 /* JournalEntryViewModel.swift */,
 				0AFC2AE92B1545B7004B6D87 /* AuthViewModel.swift */,
 				0AFC2AE72B152973004B6D87 /* JournalDetailViewModel.swift */,
 				0ACFA68D2B13FADE002B73AA /* DebugModifier.swift */,
@@ -445,6 +448,7 @@
 				0A135CFD2B030E8C00ED4A34 /* JournalEntryModel.swift in Sources */,
 				0A9158902B013E7A00284492 /* ContentView.swift in Sources */,
 				0ADD88732B0B1EF200F02CE2 /* MoodTrackerView.swift in Sources */,
+				0AFC2AF02B17AB3D004B6D87 /* JournalEntryViewModel.swift in Sources */,
 				0A1A777F2B142E4C00B203BA /* SessionStore.swift in Sources */,
 				0ACFA68E2B13FADE002B73AA /* DebugModifier.swift in Sources */,
 				0AFC2AEA2B1545B7004B6D87 /* AuthViewModel.swift in Sources */,

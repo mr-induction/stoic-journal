@@ -3,11 +3,14 @@ import SwiftUI
 struct GoalDetailView: View {
     @Binding var goal: Goal?
     var onSave: (Goal) -> Void
-    
+
     @State private var editableTitle: String = ""
     @State private var editableDescription: String = ""
     @State private var editableProgress: Double = 0
-    
+
+    // Add Environment variable for presentation mode
+    @Environment(\.presentationMode) var presentationMode
+
     var body: some View {
         NavigationView {
             Form {
@@ -15,10 +18,6 @@ struct GoalDetailView: View {
                     TextField("Title", text: $editableTitle)
                     TextField("Description", text: $editableDescription)
                     Slider(value: $editableProgress, in: 0...1, step: 0.1)
-                        .onAppear {
-                            // Debugging: Print the value of editableProgress
-                            print("editableProgress: \(editableProgress)")
-                        }
                     Button("Save Changes") {
                         let updatedGoal = Goal(
                             id: goal.id,
@@ -33,6 +32,19 @@ struct GoalDetailView: View {
                 }
             }
         }
+        .onChange(of: goal) { newValue in
+            // If goal becomes nil, dismiss the view
+            if newValue == nil {
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
+    }
+}
+
+// Make sure the Goal struct conforms to Equatable if it doesn't already
+extension Goal: Equatable {
+    static func == (lhs: Goal, rhs: Goal) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

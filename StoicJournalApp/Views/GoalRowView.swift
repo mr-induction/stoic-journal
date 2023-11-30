@@ -1,10 +1,3 @@
-//
-//  GoalRowView.swift
-//  StoicJournalApp
-//
-//  Created by Rin Otori on 11/20/23.
-//
-
 import SwiftUI
 
 struct GoalRowView: View {
@@ -25,15 +18,14 @@ struct GoalRowView: View {
                 .font(.subheadline)
             ProgressView(value: goal.progress)
 
-            // Handling optional milestones
-            if let milestonesBinding = Binding($goal.milestones) {
-                ForEach(milestonesBinding) { $milestone in
+            if let milestones = goal.milestones {
+                ForEach(milestones.indices, id: \.self) { index in
                     HStack {
-                        Image(systemName: milestone.isCompleted ? "checkmark.square" : "square")
+                        Image(systemName: milestones[index].isCompleted ? "checkmark.square" : "square")
                             .onTapGesture {
-                                milestone.isCompleted.toggle()
+                                toggleMilestoneCompletion(at: index)
                             }
-                        Text(milestone.description)
+                        Text(milestones[index].description)
                     }
                 }
             }
@@ -45,7 +37,15 @@ struct GoalRowView: View {
             }
         }
     }
-}
+
+    private func toggleMilestoneCompletion(at index: Int) {
+           // Safely unwrap milestones and check the index
+           if var milestones = goal.milestones, milestones.indices.contains(index) {
+               milestones[index].isCompleted.toggle()
+               goal.milestones = milestones  // Reassign to the binding to trigger an update
+           }
+       }
+   }
 
 extension Goal {
     var isCompleted: Bool {

@@ -60,17 +60,17 @@ class JournalViewModel: ObservableObject {
     }
 
 
-
-
     func loadMoods() {
         // Load moods from Firebase or local data
         // Example moods, replace with actual mood data from Firebase if needed
         moods = [
-            Mood(id: "1", icon: "smiley", description: "Happy"),
-            Mood(id: "2", icon: "frown", description: "Sad"),
+            Mood(id: "1", icon: "", description: "Happy"),
+            Mood(id: "2", icon: "", description: "Sad"),
             // Add more moods as needed
         ]
     }
+
+
 
     // New function to load tags
     func loadTags() {

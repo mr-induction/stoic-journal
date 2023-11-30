@@ -1,34 +1,38 @@
 import SwiftUI
 
 struct JournalInputView: View {
-    @State private var title: String = ""
-    @State private var content: String = ""
-    @State private var selectedTag: JournalTag? = nil
-    @State private var selectedMood: Mood? = nil
-    @State private var showConfirmationAlert = false
-    @State private var isSaving = false
+    @StateObject private var entryViewModel: JournalEntryViewModel
+    @State private var showConfirmationAlert: Bool = false
     @ObservedObject var journalViewModel: JournalViewModel
-    
+
     // Define a static array of journal prompts
     private let journalPrompts = [
         "What are you grateful for today?",
         "Reflect on a happy memory.",
         "What did you learn today?"
     ]
+
+    init(journalViewModel: JournalViewModel) {
+        _journalViewModel = ObservedObject(wrappedValue: journalViewModel)
+        _entryViewModel = StateObject(wrappedValue: JournalEntryViewModel(journalViewModel: journalViewModel))
+    }
     
     var body: some View {
         NavigationView {
             VStack {
                 JournalEntryForm(
-                    title: $title,
-                    content: $content,
-                    selectedTag: $selectedTag,
-                    selectedMood: $selectedMood,
+                    title: $entryViewModel.title,
+                    content: $entryViewModel.content,
+                    selectedTag: $entryViewModel.selectedTag,
+                    selectedMood: $entryViewModel.selectedMood,
                     tags: journalViewModel.tags,
                     moods: journalViewModel.moods,
-                    journalPrompts: journalPrompts // Pass the static array of journal prompts
+                    journalPrompts: journalPrompts
                 )
-                saveButton
+                SaveButtonView(isLoading: $entryViewModel.isSaving) {
+                    entryViewModel.saveJournalEntry()
+                }
+                .padding()
                 viewEntriesButton
             }
             .navigationBarTitle("", displayMode: .inline)
@@ -40,17 +44,9 @@ struct JournalInputView: View {
                 )
             }
         }
-    }
-    
-    private var saveButton: some View {
-        Button("Save Entry") {
-            saveJournalEntry()
+        .onReceive(entryViewModel.$isSaving) { isSaving in
+            showConfirmationAlert = !isSaving && !entryViewModel.title.isEmpty
         }
-        .padding()
-        .background(isSaving ? Color.gray : Color.green)
-        .foregroundColor(.white)
-        .cornerRadius(10)
-        .disabled(isSaving)
     }
     
     private var viewEntriesButton: some View {
@@ -64,41 +60,5 @@ struct JournalInputView: View {
         }
         .padding()
     }
-    
-    private func saveJournalEntry() {
-        self.isSaving = true
-        
-        // Create an array of 'JournalTag' objects from the optionally selected 'JournalTag'.
-        let entryTags: [Tag] = convertJournalTagToTag(journalTag: selectedTag)
-
-        // Use the selected mood's ID or an empty string if no mood is selected
-        let moodId = selectedMood?.id ?? ""
-        
-        // Create a new JournalEntry with the user's input
-        let newEntry = JournalEntry(
-            id: UUID(),
-            documentId: UUID().uuidString, // Generate a unique document ID
-            title: title, // Use the title entered by the user
-            content: content, // Use the content entered by the user
-            date: Date(), // Use the current date and time
-            moodId: moodId, // Use the selected mood ID
-            tags: entryTags, // Use the array of 'Tag' created from the selected JournalTag
-            stoicResponse: nil // No stoic response when creating the entry
-        )
-        
-        // Save the new entry using the journalViewModel
-        journalViewModel.createJournalEntry(newEntry) { error in
-            self.isSaving = false
-            if let error = error {
-                print("Error saving document: \(error)")
-            } else {
-                self.showConfirmationAlert = true
-                // Clear the form fields after saving
-                self.title = ""
-                self.content = ""
-                self.selectedTag = nil
-                self.selectedMood = nil
-            }
-        }
-    }
 }
+

@@ -7,9 +7,14 @@ struct GoalTrackingView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(goals.indices, id: \.self) { index in
-                    GoalRowView(goal: $goals[index])
-                        .debugPrint("Index: \(index), Goal: \(goals[index])")
+                ForEach(goals) { goal in
+                    GoalRowView(goal: Binding(get: {
+                        self.goals.first(where: { $0.id == goal.id }) ?? goal
+                    }, set: { newValue in
+                        if let index = self.goals.firstIndex(where: { $0.id == goal.id }) {
+                            self.goals[index] = newValue
+                        }
+                    }))
                 }
                 .onDelete(perform: deleteGoal)
             }
@@ -30,15 +35,18 @@ struct GoalTrackingView: View {
             }
         }
     }
-
-
+    
+    
+    
     private func loadGoals() {
         let collectionPath = "goals"
         FirebaseManager.shared.fetchDocuments(collectionPath: collectionPath) { (result: Result<[Goal], Error>) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let fetchedGoals):
+                    print("Before updating goals in loadGoals, count: \(self.goals.count)")
                     self.goals = fetchedGoals
+                    print("After updating goals in loadGoals, count: \(self.goals.count)")
                 case .failure(let error):
                     print("Error fetching goals: \(error)")
                 }
@@ -46,17 +54,24 @@ struct GoalTrackingView: View {
         }
     }
     
-    private func updateGoal(_ goal: Goal) {
-        guard let documentId = goal.firestoreDocumentId else {
+    
+    private func updateGoal(_ updatedGoal: Goal) {
+        guard let documentId = updatedGoal.firestoreDocumentId else {
             return  // Exit the function if there's no document ID
         }
         
         let collectionPath = "goals"
-        FirebaseManager.shared.performOperation(.update, collectionPath: collectionPath, documentId: documentId, document: goal) { result in
+        FirebaseManager.shared.performOperation(.update, collectionPath: collectionPath, documentId: documentId, document: updatedGoal) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success():
-                    self.loadGoals()  // Reload the goals on successful update
+                    print("Before updating goal with documentId \(documentId), goals count: \(self.goals.count)")
+                    if let index = self.goals.firstIndex(where: { $0.firestoreDocumentId == documentId }) {
+                        self.goals[index] = updatedGoal // Update the goal in the array
+                        print("After updating goal at index \(index), goals count: \(self.goals.count)")
+                    } else {
+                        print("Goal with documentId \(documentId) not found in array.")
+                    }
                 case .failure(let error):
                     print("Error updating goal: \(error)")
                 }
@@ -64,19 +79,22 @@ struct GoalTrackingView: View {
         }
     }
     
+    
+    
     private func deleteGoal(at offsets: IndexSet) {
-        for index in offsets.sorted(by: >) {
-            if let documentId = goals[index].firestoreDocumentId {
-                let collectionPath = "goals"
-                
-                FirebaseManager.shared.deleteDocument(collectionPath: collectionPath, documentId: documentId) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success():
-                            self.goals.remove(at: index)
-                        case .failure(let error):
-                            print("Error deleting goal: \(error)")
-                        }
+        offsets.forEach { index in
+            let goalToDelete = goals[index]
+            // Convert UUID to String
+            let documentId = goalToDelete.id.uuidString
+            
+            // Delete the goal from Firebase
+            FirebaseManager.shared.deleteDocument(collectionPath: "goals", documentId: documentId) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success():
+                        self.goals.remove(at: index)
+                    case .failure(let error):
+                        print("Error deleting goal: \(error)")
                     }
                 }
             }
