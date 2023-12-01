@@ -3,7 +3,9 @@ import SwiftUI
 struct GoalTrackingView: View {
     @State private var goals: [Goal] = []
     @State private var showingAddGoalView = false
-    
+    @State private var pendingDeletion: [UUID] = [] // Add this line
+
+
     var body: some View {
         NavigationView {
             List {
@@ -27,7 +29,8 @@ struct GoalTrackingView: View {
             .sheet(isPresented: $showingAddGoalView) {
                 AddGoalView(isPresented: $showingAddGoalView, onSave: { newGoal in
                     self.goals.append(newGoal)
-                    self.showingAddGoalView = false
+                    // Update Firestore here
+                    addGoalToFirestore(newGoal)
                 })
             }
             .onAppear {
@@ -35,9 +38,8 @@ struct GoalTrackingView: View {
             }
         }
     }
-    
-    
-    
+
+
     private func loadGoals() {
         let collectionPath = "goals"
         FirebaseManager.shared.fetchDocuments(collectionPath: collectionPath) { (result: Result<[Goal], Error>) in
@@ -53,13 +55,12 @@ struct GoalTrackingView: View {
             }
         }
     }
-    
-    
+
     private func updateGoal(_ updatedGoal: Goal) {
         guard let documentId = updatedGoal.firestoreDocumentId else {
             return  // Exit the function if there's no document ID
         }
-        
+
         let collectionPath = "goals"
         FirebaseManager.shared.performOperation(.update, collectionPath: collectionPath, documentId: documentId, document: updatedGoal) { result in
             DispatchQueue.main.async {
@@ -78,26 +79,45 @@ struct GoalTrackingView: View {
             }
         }
     }
-    
-    
-    
-    private func deleteGoal(at offsets: IndexSet) {
-        offsets.forEach { index in
-            let goalToDelete = goals[index]
-            // Convert UUID to String
-            let documentId = goalToDelete.id.uuidString
-            
-            // Delete the goal from Firebase
-            FirebaseManager.shared.deleteDocument(collectionPath: "goals", documentId: documentId) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success():
-                        self.goals.remove(at: index)
-                    case .failure(let error):
-                        print("Error deleting goal: \(error)")
-                    }
-                }
-            }
-        }
-    }
-}
+
+    private func addGoalToFirestore(_ goal: Goal) {
+           // Implement adding goal to Firestore
+           FirebaseManager.shared.performOperation(.create, collectionPath: "goals", document: goal) { result in
+               DispatchQueue.main.async {
+                   switch result {
+                   case .success():
+                       print("Goal successfully added to Firestore")
+                   case .failure(let error):
+                       print("Error adding goal to Firestore: \(error)")
+                   }
+               }
+           }
+       }
+
+       // Existing updateGoal function
+
+       private func deleteGoal(at offsets: IndexSet) {
+           for index in offsets {
+               let goalId = goals[index].id
+               pendingDeletion.append(goalId)
+
+               if let documentId = goals[index].firestoreDocumentId {
+                   FirebaseManager.shared.deleteDocument(collectionPath: "goals", documentId: documentId) { result in
+                       DispatchQueue.main.async {
+                           switch result {
+                           case .success():
+                               print("Successfully deleted goal from Firebase.")
+                               self.pendingDeletion.removeAll { $0 == goalId }
+                               self.goals.removeAll { $0.id == goalId }
+                           case .failure(let error):
+                               print("Error deleting goal: \(error)")
+                               self.pendingDeletion.removeAll { $0 == goalId }
+                           }
+                       }
+                   }
+               } else {
+                   print("FirestoreDocumentId not found for goal at index \(index).")
+               }
+           }
+       }
+   }

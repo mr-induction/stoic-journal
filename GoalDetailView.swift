@@ -8,7 +8,6 @@ struct GoalDetailView: View {
     @State private var editableDescription: String = ""
     @State private var editableProgress: Double = 0
 
-    // Add Environment variable for presentation mode
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -31,12 +30,18 @@ struct GoalDetailView: View {
                     }
                 }
             }
+            .navigationTitle("Edit Goal")
         }
-        .onChange(of: goal) { newValue in
-            // If goal becomes nil, dismiss the view
-            if newValue == nil {
-                presentationMode.wrappedValue.dismiss()
+        .onAppear {
+            if let goal = goal {
+                editableTitle = goal.title
+                editableDescription = goal.description
+                // Assuming progress is calculated as a fraction
+                editableProgress = goal.progress
             }
+        }
+        .onChange(of: goal) { _ in
+            presentationMode.wrappedValue.dismiss()
         }
     }
 }
