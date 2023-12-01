@@ -12,15 +12,30 @@ struct JournalEntryForm: View {
     var tags: [JournalTag]
     var journalPrompts: [String] // Array of journal prompts
 
+    // New state variable for remaining character count
+    @State private var remainingChars = 250
+
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Journal Entry")) {
                     TextField("Title", text: $title)
                     TextEditor(text: $content)
+                        .onChange(of: content) { newValue in
+                            // Calculate remaining characters
+                            remainingChars = max(250 - newValue.count, 0)
+                            // Limit the content to 250 characters
+                            if newValue.count > 250 {
+                                content = String(newValue.prefix(250))
+                            }
+                        }
                         .frame(minHeight: 200)
                         .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.gray, lineWidth: 1))
-                    
+
+                    // Display remaining character count
+                    Text("Characters left: \(remainingChars)")
+                        .foregroundColor(remainingChars > 0 ? .gray : .red)
+
                     Button(action: addRandomPrompt) {
                         Text("Add Random Prompt")
                             .frame(maxWidth: .infinity)
@@ -63,3 +78,4 @@ struct JournalEntryForm: View {
         content += (content.isEmpty ? "" : "\n\n") + randomPrompt
     }
 }
+

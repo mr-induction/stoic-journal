@@ -5,15 +5,8 @@ struct JournalInputView: View {
     @State private var showConfirmationAlert: Bool = false
     @ObservedObject var journalViewModel: JournalViewModel
     
-    // Create an instance of MoodTrackerViewModel
     @StateObject private var moodTrackerViewModel = MoodTrackerViewModel()
-
-    // Define a static array of journal prompts
-    private let journalPrompts = [
-        "What are you grateful for today?",
-        "Reflect on a happy memory.",
-        "What did you learn today?"
-    ]
+    private let journalPrompts = ["What are you grateful for today?", "Reflect on a happy memory.", "What did you learn today?"]
 
     init(journalViewModel: JournalViewModel) {
         _journalViewModel = ObservedObject(wrappedValue: journalViewModel)
@@ -23,15 +16,14 @@ struct JournalInputView: View {
     var body: some View {
         NavigationView {
             VStack {
-                // Pass the MoodTrackerViewModel instance to the JournalEntryForm
                 JournalEntryForm(
                     title: $entryViewModel.title,
                     content: $entryViewModel.content,
                     selectedTag: $entryViewModel.selectedTag,
                     selectedMood: $entryViewModel.selectedMood,
-                    viewModel: moodTrackerViewModel, tags: journalViewModel.tags,
-                    // Remove the moods parameter if it's no longer needed here
-                    journalPrompts: journalPrompts // Pass the view model here
+                    viewModel: moodTrackerViewModel,
+                    tags: journalViewModel.tags,
+                    journalPrompts: journalPrompts
                 )
                 SaveButtonView(isLoading: $entryViewModel.isSaving) {
                     entryViewModel.saveJournalEntry()
@@ -39,15 +31,18 @@ struct JournalInputView: View {
                 .padding()
                 viewEntriesButton
             }
+            .background(
+                Image("stoicbackground") // Make sure this image name matches exactly with the one in your asset catalog
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(0.3)
+            )
             .navigationBarTitle("", displayMode: .inline)
             .alert(isPresented: $showConfirmationAlert) {
-                Alert(
-                    title: Text("Entry Saved"),
-                    message: Text("Your journal entry has been saved successfully."),
-                    dismissButton: .default(Text("OK"))
-                )
+                Alert(title: Text("Entry Saved"), message: Text("Your journal entry has been saved successfully."), dismissButton: .default(Text("OK")))
             }
         }
+        .edgesIgnoringSafeArea(.all) // This will allow the background to extend under the navigation bar
         .onReceive(entryViewModel.$isSaving) { isSaving in
             showConfirmationAlert = !isSaving && !entryViewModel.title.isEmpty
         }
